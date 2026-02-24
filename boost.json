@@ -1,0 +1,13 @@
+{
+    "agents": [
+        "junie",
+        "copilot",
+        "cursor",
+        "claude_code"
+    ],
+    "guidelines": true,
+    "herd_mcp": false,
+    "mcp": true,
+    "nightwatch_mcp": false,
+    "sail": false
+}
