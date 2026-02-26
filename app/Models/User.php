@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'is_verified',
+        'is_admin',
         'otp_code',
         'otp_expires_at',
         'api_token',
@@ -45,12 +46,18 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+    public function confessions()
+    {
+        return $this->hasMany(Confession::class);
+    }
+
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'otp_expires_at' => 'datetime',
             'is_verified' => 'boolean',
+            'is_admin' => 'boolean',
             'password' => 'hashed',
         ];
     }
