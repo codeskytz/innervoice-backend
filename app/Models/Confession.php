@@ -39,6 +39,21 @@ class Confession extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class)->whereNull('parent_comment_id')->with('user', 'replies');
+    }
+
+    public function allComments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     public function scopePublished($query)
     {
         return $query->whereNotNull('created_at');

@@ -4,7 +4,9 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ConfessionController;
+use App\Http\Controllers\LikeController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\AuthenticateWithToken;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +33,19 @@ Route::middleware(AuthenticateWithToken::class)->group(function () {
     Route::get('my-confessions', [ConfessionController::class, 'myConfessions']); // Get user's confessions
     Route::put('confessions/{id}', [ConfessionController::class, 'update']); // Update confession
     Route::delete('confessions/{id}', [ConfessionController::class, 'destroy']); // Delete confession
+
+    // Like routes
+    Route::post('confessions/{id}/like', [LikeController::class, 'store']); // Like a confession
+    Route::delete('confessions/{id}/like', [LikeController::class, 'destroy']); // Unlike a confession
+    Route::get('confessions/{id}/like/check', [LikeController::class, 'check']); // Check if liked
+
+    // Comment routes
+    Route::get('confessions/{id}/comments', [CommentController::class, 'index']); // Get all comments
+    Route::post('confessions/{id}/comments', [CommentController::class, 'store']); // Create comment
+    Route::put('comments/{id}', [CommentController::class, 'update']); // Update comment
+    Route::delete('comments/{id}', [CommentController::class, 'destroy']); // Delete comment
+    Route::get('comments/{id}/replies', [CommentController::class, 'getReplies']); // Get replies for a comment
+    Route::post('comments/{id}/replies', [CommentController::class, 'addReply']); // Add reply to comment
 });
 
 // Public categories endpoint
