@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Comment extends Model
 {
     protected $fillable = ['user_id', 'confession_id', 'text', 'parent_comment_id'];
-    protected $withCount = ['replies'];
+    // protected $withCount = ['replies']; // Removing this fixes the infinite loop out-of-memory crash when eager-loading recursive relationships.
 
     public function user()
     {
@@ -28,7 +28,7 @@ class Comment extends Model
     // Child comments (replies)
     public function replies()
     {
-        return $this->hasMany(Comment::class, 'parent_comment_id')->with('user', 'replies');
+        return $this->hasMany(Comment::class, 'parent_comment_id');
     }
 
     // Check if this is a root comment (not a reply)

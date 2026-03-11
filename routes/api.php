@@ -6,7 +6,12 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ConfessionController;
+use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\DatingProfileController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\SeedController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\AuthenticateWithToken;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +27,36 @@ Route::post('auth/reset-password', [AuthController::class, 'resetPassword']);
 // Confession routes - Public (viewable without auth)
 Route::get('confessions', [ConfessionController::class, 'index']); // Get all confessions (feed)
 Route::get('confessions/{id}', [ConfessionController::class, 'show']); // Get single confession
+Route::get('confessions/{id}/comments', [CommentController::class, 'index']); // Get all comments (public)
+Route::get('comments/{id}/replies', [CommentController::class, 'getReplies']); // Get replies (public)
+
+// Community routes - Public (list communities & read messages)
+Route::get('communities', [CommunityController::class, 'index']);
+Route::get('communities/{id}', [CommunityController::class, 'show']);
+Route::post('communities', [CommunityController::class, 'store']);
+Route::post('communities/{id}/join', [CommunityController::class, 'join']);
+Route::get('communities/{id}/messages', [CommunityController::class, 'messages']);
+
+// Dating routes
+Route::get('dating/profiles', [DatingProfileController::class, 'index']);
+Route::get('dating/profiles/{id}', [DatingProfileController::class, 'show']);
+Route::post('dating/profiles', [DatingProfileController::class, 'store']);
+Route::post('dating/like/{profileId}', [DatingProfileController::class, 'likeProfile']);
+Route::get('dating/matches/{userId}', [DatingProfileController::class, 'matches']);
+Route::get('dating/matches/{matchId}/messages', [DatingProfileController::class, 'messages']);
+Route::post('dating/matches/{matchId}/messages', [DatingProfileController::class, 'sendMessage']);
+
+// User routes
+Route::post('users', [UserController::class, 'store']);
+Route::get('users/{id}', [UserController::class, 'show']);
+Route::put('users/{id}', [UserController::class, 'update']);
+
+// Notification routes
+Route::get('notifications/{userId}', [NotificationController::class, 'index']);
+Route::post('notifications/{id}/read', [NotificationController::class, 'markRead']);
+
+// Seed routes
+Route::post('seed', [SeedController::class, 'seed']);
 
 // Protected routes
 Route::middleware(AuthenticateWithToken::class)->group(function () {
@@ -34,17 +69,18 @@ Route::middleware(AuthenticateWithToken::class)->group(function () {
     Route::put('confessions/{id}', [ConfessionController::class, 'update']); // Update confession
     Route::delete('confessions/{id}', [ConfessionController::class, 'destroy']); // Delete confession
 
+    // Community routes - Protected (send messages)
+    Route::post('communities/{id}/messages', [CommunityController::class, 'sendMessage']);
+
     // Like routes
     Route::post('confessions/{id}/like', [LikeController::class, 'store']); // Like a confession
     Route::delete('confessions/{id}/like', [LikeController::class, 'destroy']); // Unlike a confession
     Route::get('confessions/{id}/like/check', [LikeController::class, 'check']); // Check if liked
 
     // Comment routes
-    Route::get('confessions/{id}/comments', [CommentController::class, 'index']); // Get all comments
     Route::post('confessions/{id}/comments', [CommentController::class, 'store']); // Create comment
     Route::put('comments/{id}', [CommentController::class, 'update']); // Update comment
     Route::delete('comments/{id}', [CommentController::class, 'destroy']); // Delete comment
-    Route::get('comments/{id}/replies', [CommentController::class, 'getReplies']); // Get replies for a comment
     Route::post('comments/{id}/replies', [CommentController::class, 'addReply']); // Add reply to comment
 });
 
