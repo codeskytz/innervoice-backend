@@ -25,7 +25,14 @@ class User extends Authenticatable
         'is_admin',
         'otp_code',
         'otp_expires_at',
+        'otp_expires_at',
         'api_token',
+        'nickname',
+        'bio',
+        'age',
+        'gender',
+        'interests',
+        'avatar',
     ];
 
     /**
@@ -64,6 +71,7 @@ class User extends Authenticatable
             'is_verified' => 'boolean',
             'is_admin' => 'boolean',
             'password' => 'hashed',
+            'interests' => 'array',
         ];
     }
 }

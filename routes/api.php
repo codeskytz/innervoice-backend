@@ -37,14 +37,7 @@ Route::post('communities', [CommunityController::class, 'store']);
 Route::post('communities/{id}/join', [CommunityController::class, 'join']);
 Route::get('communities/{id}/messages', [CommunityController::class, 'messages']);
 
-// Dating routes
-Route::get('dating/profiles', [DatingProfileController::class, 'index']);
-Route::get('dating/profiles/{id}', [DatingProfileController::class, 'show']);
-Route::post('dating/profiles', [DatingProfileController::class, 'store']);
-Route::post('dating/like/{profileId}', [DatingProfileController::class, 'likeProfile']);
-Route::get('dating/matches/{userId}', [DatingProfileController::class, 'matches']);
-Route::get('dating/matches/{matchId}/messages', [DatingProfileController::class, 'messages']);
-Route::post('dating/matches/{matchId}/messages', [DatingProfileController::class, 'sendMessage']);
+// Dating routes (moved to protected section)
 
 // User routes
 Route::post('users', [UserController::class, 'store']);
@@ -69,6 +62,9 @@ Route::middleware(AuthenticateWithToken::class)->group(function () {
     Route::put('confessions/{id}', [ConfessionController::class, 'update']); // Update confession
     Route::delete('confessions/{id}', [ConfessionController::class, 'destroy']); // Delete confession
 
+    // User Avatar route
+    Route::post('users/{id}/avatar', [UserController::class, 'uploadAvatar']);
+
     // Community routes - Protected (send messages)
     Route::post('communities/{id}/messages', [CommunityController::class, 'sendMessage']);
 
@@ -82,6 +78,15 @@ Route::middleware(AuthenticateWithToken::class)->group(function () {
     Route::put('comments/{id}', [CommentController::class, 'update']); // Update comment
     Route::delete('comments/{id}', [CommentController::class, 'destroy']); // Delete comment
     Route::post('comments/{id}/replies', [CommentController::class, 'addReply']); // Add reply to comment
+
+    // Dating routes
+    Route::get('dating/profiles', [DatingProfileController::class, 'index']);
+    Route::get('dating/profiles/{id}', [DatingProfileController::class, 'show']);
+    Route::post('dating/profiles', [DatingProfileController::class, 'store']);
+    Route::post('dating/like/{profileId}', [DatingProfileController::class, 'likeProfile']);
+    Route::get('dating/matches/{userId}', [DatingProfileController::class, 'matches']);
+    Route::get('dating/matches/{matchId}/messages', [DatingProfileController::class, 'messages']);
+    Route::post('dating/matches/{matchId}/messages', [DatingProfileController::class, 'sendMessage']);
 });
 
 // Public categories endpoint

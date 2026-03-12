@@ -183,8 +183,9 @@ class CommentController extends Controller
             'id' => $comment->id,
             'user' => [
                 'id' => $comment->user->id,
-                'name' => $comment->user->name,
+                'name' => $comment->user->nickname ?: $comment->user->name,
                 'is_anonymous' => false,
+                'avatar' => $comment->user->avatar ? \Illuminate\Support\Facades\Storage::url($comment->user->avatar) : null,
             ],
             'text' => $comment->text,
             'likes_count' => $comment->likes_count,
